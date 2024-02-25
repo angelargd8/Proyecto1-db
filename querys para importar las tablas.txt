@@ -18,7 +18,10 @@ CREATE TABLE Public."appearances"(
 	time int,
 	substituteIn varchar(10),
 	substituteOut varchar(10),
-	leagueID varchar(10))
+	leagueID varchar(10)),
+    FOREIGN KEY (gameID) REFERENCES games(gameID),
+    FOREIGN KEY (playerID) REFERENCES players(playerID),
+    FOREIGN KEY (leagueID) REFERENCES leagues(leagueID)
 
 
 
@@ -63,7 +66,8 @@ CREATE TABLE Public."games"(
     VCA float,
     PSCH float,
     PSCD float,
-    PSCA float
+    PSCA float,
+    FOREIGN KEY (leagueID) REFERENCES leagues(leagueID)
 );
 
 \COPY games from 'C:\Users\angel\OneDrive\Escritorio\u\archivos\games.csv' delimiter ',' CSV HEADER;
@@ -103,7 +107,11 @@ CREATE TABLE Public."shots" (
     shotResult varchar(20),
     xGoal float,
     positionX float,
-    positionY float
+    positionY float, 
+    FOREIGN KEY (gameID) REFERENCES games(gameID),
+    FOREIGN KEY (shooterID) REFERENCES players(playerID),
+    FOREIGN KEY (assisterID) REFERENCES players(playerID)
+
 );
 
 \COPY shots from 'C:\Users\angel\OneDrive\Escritorio\u\archivos\shots.csv' delimiter ',' CSV HEADER;
@@ -138,6 +146,9 @@ CREATE TABLE Public."teamstats" (
     yellowCards int,
     redCards int,
     result varchar(10)
+    FOREIGN KEY (gameID) REFERENCES games(gameID),
+    FOREIGN KEY (teamID) REFERENCES teams(teamID)
+
 )
 
 \COPY teamstats from 'C:\Users\angel\OneDrive\Escritorio\u\archivos\teamstats.csv' delimiter ',' CSV HEADER;
