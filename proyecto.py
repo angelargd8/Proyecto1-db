@@ -6,7 +6,7 @@ conexion= conexiones()
 cursor= conexion.cursor()
 
 #queries sql
-sql='SELECT * FROM teams'
+sql='SELECT shooterid FROM shots'
 #con lo que se ejecutan las consultas
 cursor.execute(sql)
 #mostrar el resultado

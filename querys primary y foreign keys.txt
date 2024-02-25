@@ -1,0 +1,24 @@
+-------------primary y FOREIGN KEY---------------
+
+
+
+ALTER TABLE leagues ADD PRIMARY KEY (leagueID);
+ALTER TABLE players ADD PRIMARY KEY (playerID);
+ALTER TABLE teams ADD PRIMARY KEY (teamID);
+ALTER TABLE games ADD PRIMARY KEY (gameID);
+
+
+
+ALTER TABLE teamstats ADD FOREIGN KEY (gameID) REFERENCES games(gameID); 
+ALTER TABLE teamstats ADD FOREIGN KEY (teamID) REFERENCES teams(teamID);
+
+ALTER TABLE shots ADD FOREIGN KEY (gameID) REFERENCES games(gameID); 
+ALTER TABLE shots ADD FOREIGN KEY (shooterID) REFERENCES players(playerID); 
+ALTER TABLE shots ADD FOREIGN KEY (assisterID) REFERENCES players(playerID); 
+
+ALTER TABLE games ADD FOREIGN KEY (leagueID) REFERENCES leagues(leagueID); 
+
+ALTER TABLE appearances ADD FOREIGN KEY (gameID) REFERENCES games(gameID); 
+ALTER TABLE appearances ADD FOREIGN KEY (playerID) REFERENCES players(playerID); 
+ALTER TABLE appearances ADD FOREIGN KEY (leagueID) REFERENCES leagues(leagueID); 
+

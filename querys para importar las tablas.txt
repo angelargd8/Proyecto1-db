@@ -18,15 +18,22 @@ CREATE TABLE Public."appearances"(
 	time int,
 	substituteIn varchar(10),
 	substituteOut varchar(10),
-	leagueID varchar(10)),
+	leagueID int,
     FOREIGN KEY (gameID) REFERENCES games(gameID),
     FOREIGN KEY (playerID) REFERENCES players(playerID),
     FOREIGN KEY (leagueID) REFERENCES leagues(leagueID)
+);
 
 
 
 PSQL tool:
 \COPY appearances from 'C:\Users\angel\OneDrive\Escritorio\u\archivos\appearances.csv' delimiter ',' CSV HEADER;
+
+
+ALTER TABLE appearances ADD FOREIGN KEY (gameID) REFERENCES games(gameID); 
+ALTER TABLE appearances ADD FOREIGN KEY FOREIGN KEY (playerID) REFERENCES players(playerID); 
+ALTER TABLE appearances ADD FOREIGN KEY (leagueID) REFERENCES leagues(leagueID); 
+
 
 
 ---------------------------tabla 2-----------------------------------
@@ -72,6 +79,10 @@ CREATE TABLE Public."games"(
 
 \COPY games from 'C:\Users\angel\OneDrive\Escritorio\u\archivos\games.csv' delimiter ',' CSV HEADER;
 
+ALTER TABLE games ADD PRIMARY KEY (gameID);
+
+ALTER TABLE games ADD FOREIGN KEY (leagueID) REFERENCES leagues(leagueID); 
+
 
 ---------------------------tabla 3-----------------------------------
 
@@ -83,23 +94,27 @@ CREATE TABLE Public."leagues"(
     
 \COPY leagues from 'C:\Users\angel\OneDrive\Escritorio\u\archivos\leagues.csv' delimiter ',' CSV HEADER;
 
+ALTER TABLE leagues ADD PRIMARY KEY (leagueID);
+
 
 ---------------------------tabla 4-----------------------------------
 
 CREATE TABLE Public."players"(
-    playerID int,
+    playerID varchar(10),
     name varchar(50)
     )
 
 \COPY players from 'C:\Users\angel\OneDrive\Escritorio\u\archivos\players.csv' delimiter ',' CSV HEADER;
+
+ALTER TABLE players ADD PRIMARY KEY (playerID);
 
 
 ---------------------------tabla 5-----------------------------------
 
 CREATE TABLE Public."shots" (
     gameID int,
-    shooterID varchar(20),
-    assisterID varchar(20),
+    shooterID varchar(10),
+    assisterID varchar(10),
     minute int,
     situation varchar(20),
     lastAction varchar(20),
@@ -116,6 +131,9 @@ CREATE TABLE Public."shots" (
 
 \COPY shots from 'C:\Users\angel\OneDrive\Escritorio\u\archivos\shots.csv' delimiter ',' CSV HEADER;
 
+ALTER TABLE shots ADD FOREIGN KEY (gameID) REFERENCES games(gameID); 
+ALTER TABLE shots ADD FOREIGN KEY (shooterID) REFERENCES players(playerID); 
+ALTER TABLE shots ADD FOREIGN KEY (assisterID) REFERENCES players(playerID); 
 
 ---------------------------tabla 6-----------------------------------
 CREATE TABLE Public."teams"(
@@ -124,6 +142,8 @@ CREATE TABLE Public."teams"(
     )
 
 \COPY teams from 'C:\Users\angel\OneDrive\Escritorio\u\archivos\teams.csv' delimiter ',' CSV HEADER;
+
+ALTER TABLE teams ADD PRIMARY KEY (teamID);
 
 
 ---------------------------tabla 7-----------------------------------
@@ -153,3 +173,5 @@ CREATE TABLE Public."teamstats" (
 
 \COPY teamstats from 'C:\Users\angel\OneDrive\Escritorio\u\archivos\teamstats.csv' delimiter ',' CSV HEADER;
 
+ALTER TABLE teamstats ADD FOREIGN KEY (gameID) REFERENCES games(gameID); 
+ALTER TABLE teamstats ADD FOREIGN KEY (teamID) REFERENCES teams(teamID); 
