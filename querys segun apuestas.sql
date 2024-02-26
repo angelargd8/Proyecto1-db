@@ -139,3 +139,79 @@ ORDER BY max_probabilidad DESC LIMIT 1;
 ---------------------- 5 ------------------------
 SELECT teamid, name
 FROM public.teams WHERE teamid='161';
+
+
+---------------5 ------------
+WITH PlayerStats AS (
+    select
+        p.playerID,
+        g.leagueID,
+        g.season,
+        SUM(a.goals) AS total_goals,
+        RANK() OVER (PARTITION BY g.leagueID, g.season ORDER BY SUM(a.goals) DESC) AS goals_rank
+    from Public."appearances" a
+    join Public."players" p ON a.playerID = p.playerID
+    join Public."games" g ON a.gameID = g.gameID
+    group by
+        p.playerID,
+        g.leagueID,
+        g.season
+)
+select
+    ps.playerID,
+    p.name AS player_name,
+    ps.leagueID,
+    ps.season,
+    ps.total_goals
+FROM
+    PlayerStats ps
+JOIN
+    Public."players" p ON ps.playerID = p.playerID
+WHERE
+    ps.goals_rank = 1
+
+
+
+---------- 6 ------------
+WITH PlayerStats AS (
+    SELECT
+        p.playerID,
+        CASE WHEN g.homeTeamID = a.teamID THEN g.homeTeamID ELSE g.awayTeamID END AS teamID,
+        g.leagueID,
+        g.season,
+        SUM(a.goals) AS total_goals,
+        RANK() OVER (PARTITION BY g.leagueID, g.season ORDER BY SUM(a.goals) DESC) AS goals_rank
+    FROM
+        Public."appearances" a
+    JOIN
+        Public."players" p ON a.playerID = p.playerID
+    JOIN
+        Public."games" g ON a.gameID = g.gameID
+    GROUP BY
+        p.playerID,
+        teamID,
+        g.leagueID,
+        g.season
+)
+SELECT
+    ps.playerID,
+    p.name AS player_name,
+    t.name AS team_name,
+    ps.leagueID,
+    ps.season,
+    ps.total_goals
+FROM
+    PlayerStats ps
+JOIN
+    Public."players" p ON ps.playerID = p.playerID
+JOIN
+    Public."teams" t ON ps.teamID = t.teamID
+WHERE
+    ps.goals_rank = 1;
+
+------------------ 7 ------------------
+
+select ts.teamid, t.name,  (ts.goals), avg(ts.xgoals) * ts.goals / 10 as goles_esperados from public.teamstats ts
+join public.teams t on (ts.teamid = t.teamid)
+group by ts.teamid, t.name,  ts.goals,ts.xgoals
+order by goles_esperados desc

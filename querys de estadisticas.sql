@@ -11,6 +11,7 @@ group by ts.season, t.name, l.name
 
 
 
+-- 2.  ¿Quién es el mejor equipo de todas las ligas y de todas las temporadas según las
 -- estadísticas de diferencia de goles?
 -- Hint: Obtenga la cantidad de goles a favor, goles en contra y la diferencia entre las dos
 -- anteriores, esto por cada temporada y por cada equipo de cada liga.

@@ -150,14 +150,14 @@ def relaciones():
 
 #persistencia de archivos
 def appearances():
-    with open('C:\\Users\\angel\\OneDrive\\Escritorio\\u\\archivos\\appearances.csv','r') as f:
+    with open('.\\archivos\\appearances.csv','r') as f:
         next(f)
         data = f.read().replace('"', '')  #Eliminar las comillas
         data_io = io.StringIO(data)  #Crea un objeto StringIO
         cursor.copy_from(data_io, 'appearances', sep=',')
 
 def games():
-    with open('C:\\Users\\angel\\OneDrive\\Escritorio\\u\\archivos\\games.csv','r') as f:
+    with open('.\\archivos\\games.csv','r') as f:
         next(f)
         data = f.read().replace('"', '')  #Eliminar las comillas
         data_io = io.StringIO(data)  #Crea un objeto StringIO
@@ -165,7 +165,7 @@ def games():
 
 
 def leagues():
-    with open('C:\\Users\\angel\\OneDrive\\Escritorio\\u\\archivos\\leagues.csv','r') as f:
+    with open('.\\archivos\\leagues.csv','r') as f:
         next(f)
         data = f.read().replace('"', '')  #Eliminar las comillas
         data_io = io.StringIO(data)  #Crea un objeto StringIO
@@ -173,14 +173,14 @@ def leagues():
 
 
 def players():
-    with open('C:\\Users\\angel\\OneDrive\\Escritorio\\u\\archivos\\players.csv','r') as f:
+    with open('.\\archivos\\players.csv','r') as f:
         next(f)
         data = f.read().replace('"', '')  #Eliminar las comillas
         data_io = io.StringIO(data)  #Crea un objeto StringIO
         cursor.copy_from(data_io, 'players', sep=',')
 
 def shots():
-    with open('C:\\Users\\angel\\OneDrive\\Escritorio\\u\\archivos\\shots.csv','r') as f:
+    with open('.\\archivos\\shots.csv','r') as f:
         next(f)
         data = f.read().replace('"', '')  #Eliminar las comillas
         data_io = io.StringIO(data)  #Crea un objeto StringIO
@@ -188,7 +188,7 @@ def shots():
 
 
 def teams():
-    with open('C:\\Users\\angel\\OneDrive\\Escritorio\\u\\archivos\\teams.csv','r') as f:
+    with open('.\\archivos\\teams.csv','r') as f:
         next(f)
         data = f.read().replace('"', '')  #Eliminar las comillas
         data_io = io.StringIO(data)  #Crea un objeto StringIO
@@ -196,7 +196,7 @@ def teams():
 
 
 def teamstats():
-    with open('C:\\Users\\angel\\OneDrive\\Escritorio\\u\\archivos\\teamstats.csv','r') as f:
+    with open('.\\archivos\\teamstats.csv','r') as f:
         next(f)
         data = f.read().replace('"', '')  #Eliminar las comillas
         data_io = io.StringIO(data)  #Crea un objeto StringIO
