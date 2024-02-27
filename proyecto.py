@@ -12,6 +12,7 @@ join public.teamstats ts on (t.teamid = ts.teamid )
 join public.games g on (ts.gameID = g.gameID)
 join public.leagues l on (g.leagueid = l.leagueid)
 group by ts.season, t.name, l.name
+limit 10;
 '''
 
 sql2 = '''
@@ -69,7 +70,8 @@ select shooterID,
 from Public."shots"
 where  shotResult = 'Goal'
 group by  shooterID) as shoots
-on (Goals.playerID= shoots.shooterID)'''
+on (Goals.playerID= shoots.shooterID)
+limit 10 '''
 
 
 sql4='''SELECT season, leagueID, homeTeamID, 

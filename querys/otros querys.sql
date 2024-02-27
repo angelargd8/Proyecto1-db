@@ -222,3 +222,47 @@ order by total_ganados desc) as ganadores
 on (empates.teamID = ganadores.teamid)
 group by ganadores.name, empates.sum_goals
 order by sum_goals desc
+
+
+-- -----------------------------------------------------------------------------------------
+-- La cuota mínima que la casa B365 da por ganar (mientras más baja, más probabilidades hay de ganar pero se gana menos dinero si se apuesta por ella y se acierta)
+
+
+select t.name,
+    MIN(CASE
+            WHEN g.hometeamid = t.teamid THEN g.B365H
+            WHEN g.awayteamid = t.teamid THEN g.B365A
+            ELSE NULL
+        END
+    ) AS min_odds
+from  public.teams t
+join
+    public.games g ON 
+    (t.teamid = g.hometeamid OR t.teamid = g.awayteamid)
+GROUP BY
+    t.name
+HAVING
+    MIN(CASE
+            WHEN g.hometeamid = t.teamid THEN g.B365H
+            WHEN g.awayteamid = t.teamid THEN g.B365A
+            ELSE NULL
+        END
+    ) != 0 
+ORDER BY
+    min_odds ASC;
+
+-- -----------------------------------------------------------------------------------------
+-- El promedio de goles según estén de home o away
+
+
+SELECT
+    t.name AS team_name,
+    AVG(CASE WHEN g.hometeamid = t.teamid THEN g.homegoals ELSE null END) AS avg_goals_home,
+    AVG(CASE WHEN g.awayteamid = t.teamid THEN g.awaygoals ELSE null END) AS avg_goals_away
+FROM
+    public.games g
+JOIN
+    public.teams t ON g.hometeamid = t.teamid OR g.awayteamid = t.teamid
+GROUP BY
+    t.name
+order by avg_goals_home desc
