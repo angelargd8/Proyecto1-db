@@ -374,6 +374,48 @@ GROUP BY ts.teamID, teams.name
 ORDER BY casa_gana desc, visita_gana desc LIMIT 10;
 '''
 
+sql15 = '''select t.name, g. leagueID ,count(*) as num_wins_empates from public.games g
+join public.teamstats ts on (g gameID = ts.gameID)
+join public.teams t on (t.teamid = ts.teamid)
+where ts.result = 'W' or ts.result = 'D'
+group by t.name, g. leagueID order by num_wins_empates desc'''
+
+sql16 = '''select t.name, count(*) as total_ganados, sum(ts.goals) as goles from public. teamstats ts
+join public.teams t on (t. teamid = ts. teamid)
+where ts.result = 'W'
+group by t. name order by goles desc'''
+
+sql17 = '''select t.name, count(*) as total_ganados, sum(ts goals) as goles from public.teamstats ts
+join public.teams t on (t.teamid = ts.teamid)
+where ts.result = 'W'
+group by t. name order by total_ganados desc
+'''
+
+sql8 = '''
+select empates.sum_goals, ganadores.name from 
+
+(select  ts.teamID, t.name,
+    sum(ts.goals) AS sum_goals,
+    sum(ts.shots) AS sum_shots   
+from Public."teamstats" ts
+join public.teams t on (t.teamid = ts.teamid)
+where result = 'D' 
+group by ts.teamID, t.name
+order by sum_goals desc) as empates
+
+join 
+
+(select ts.teamid, t.name,  sum(ts.goals) as goles, count(*) as total_ganados from
+public.teamstats ts 
+join public.teams t on (t.teamid = ts.teamid)
+where ts.result = 'W'
+group by t.name, ts.teamid
+order by total_ganados desc) as ganadores
+
+on (empates.teamID = ganadores.teamid)
+group by ganadores.name, empates.sum_goals
+order by sum_goals desc'''
+
 #con lo que se ejecutan las consultas
 print("\nejercicio 1")
 cursor.execute(sql1)
@@ -427,6 +469,23 @@ print("\nejercicio 14: Comparación de los primeros 10 los equipos en casa y fue
 cursor.execute(sql14)
 registro= cursor.fetchall() 
 print(registro)
+print("\nejercicio 15: equipos con más victorias y empates")
+cursor.execute(sql15)
+registro= cursor.fetchall()
+print(registro)
+print("\nejercicio 16: equipos con más goles")
+cursor.execute(sql16)
+registro= cursor.fetchall()
+print(registro)
+print("\nejercicio 17: Los equipos que más partidos ganados tiene y cuantos goles")
+cursor.execute(sql17)
+registro= cursor.fetchall()
+print(registro)
+print("\nejercicio 8")
+cursor.execute(sql8)
+registro= cursor.fetchall()
+print(registro)
+
 #mostrar el resultado
 
 #cerrando la conexión a la base de datos
