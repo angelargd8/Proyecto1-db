@@ -136,8 +136,7 @@ def relaciones():
 
     ALTER TABLE shots ADD FOREIGN KEY (gameID) REFERENCES games(gameID); 
     ALTER TABLE shots ADD FOREIGN KEY (shooterID) REFERENCES players(playerID); 
-    ALTER TABLE shots ADD FOREIGN KEY (assisterID) REFERENCES players(playerID); 
-
+   
     ALTER TABLE games ADD FOREIGN KEY (leagueID) REFERENCES leagues(leagueID); 
 
     ALTER TABLE appearances ADD FOREIGN KEY (gameID) REFERENCES games(gameID); 
@@ -205,13 +204,16 @@ def teamstats():
 
 
 creacion_tablas()
+teams()
+players()
+leagues()
 appearances()
 games()
-leagues()
-players()
 shots()
-teams()
 teamstats()
+
+relaciones()
+
 
 conexion.commit()
 cursor.close()
