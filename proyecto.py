@@ -7,6 +7,71 @@ cursor= conexion.cursor()
 
 #queries sql
 #sql='SELECT shooterid FROM shots'
+sql1 = '''select count(*), ts.season, t.name as teamName, l.name as leagueName from public.teams t
+join public.teamstats ts on (t.teamid = ts.teamid )
+join public.games g on (ts.gameID = g.gameID)
+join public.leagues l on (g.leagueid = l.leagueid)
+group by ts.season, t.name, l.name
+'''
+
+sql2 = '''
+
+WITH TeamGoals AS (
+select
+    home.homeTeamID as team_id,
+    home.name AS team_name,
+	home.season,
+	home.leagueID,
+    
+    home.goals_difference + away.goals_difference AS total_goals_difference
+FROM(
+select g.homeTeamID, t.name,g.season,  g.leagueID,SUM(g.homegoals-g.awaygoals) as goals_difference
+from public.teams t
+join public.games g on ( g.homeTeamID = t.teamid)
+group by  g.homeTeamID, t.name, g.season,g.leagueID
+order by goals_difference desc) as home
+join (
+select g.awayTeamID, t.name, g.season, g.leagueID,sum(g.awaygoals-g.homegoals) as goals_difference from  public.teams t
+join public.games g on ( g.awayTeamID = t.teamid)
+group by  g.awayTeamID, t.name, g.season,g.leagueID
+order by goals_difference desc) as away 
+on(home.homeTeamID = away.awayTeamID
+    AND home.season = away.season)
+ORDER BY
+    total_goals_difference desc)
+select 
+    team_id,
+    team_name,
+    season,leagueID,
+    total_goals_difference,
+    RANK() OVER (PARTITION BY season, leagueID ORDER BY total_goals_difference DESC) AS ranking
+FROM
+    TeamGoals
+ORDER BY
+    total_goals_difference desc,
+    ranking;'''
+
+
+sql3 = '''select Goals.player_name, Goals.total_goals, shoots.left_foot_goals, shoots.right_foot_goals
+, shoots.total_passes
+from
+(select a.playerID, p.name as player_name, count(*) AS total_goals
+from Public."appearances" a
+join public.players p on (a.playerid = p.playerid)
+where  goals > 0
+group by a.playerID, p.name
+order by total_goals DESC ) as Goals
+join
+(
+select shooterID, 
+    SUM(CASE WHEN shotType = 'LeftFoot' THEN 1 ELSE 0 END) AS left_foot_goals,
+    SUM(CASE WHEN shotType = 'RightFoot' THEN 1 ELSE 0 END) AS right_foot_goals, COUNT(*) AS total_passes
+from Public."shots"
+where  shotResult = 'Goal'
+group by  shooterID) as shoots
+on (Goals.playerID= shoots.shooterID)'''
+
+
 sql4='''SELECT season, leagueID, homeTeamID, 
 GREATEST(
     AVG(CASE WHEN B365D = 0 THEN 0 ELSE 1/B365D END), 
@@ -310,6 +375,18 @@ ORDER BY casa_gana desc, visita_gana desc LIMIT 10;
 '''
 
 #con lo que se ejecutan las consultas
+print("\nejercicio 1")
+cursor.execute(sql1)
+registro= cursor.fetchall()
+print(registro)
+print("\nejercicio 2")
+cursor.execute(sql2)
+registro= cursor.fetchall()
+print(registro)
+print("\nejercicio 3")
+cursor.execute(sql3)
+registro= cursor.fetchall()
+print(registro)
 print("\nejercicio 4")
 cursor.execute(sql4)
 registro= cursor.fetchall() 

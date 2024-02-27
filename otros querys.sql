@@ -165,6 +165,10 @@ join teams on ts.teamID = teams.teamID
 GROUP BY ts.teamID, teams.name
 ORDER BY casa_gana desc, visita_gana desc LIMIT 10;
 
+
+
+
+
 -----------------------------------------------------------------------------------------
 -- Los equipos que más han ganado y empatado de todas las ligas y las season, sin importar la diferencia de goles 
 select t.name, g. leagueID ,count(*) as num_wins_empates from public.games g
